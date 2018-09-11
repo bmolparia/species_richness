@@ -64,6 +64,23 @@ def calc_beta(counts1,counts2,method='fractions'):
 
 	return BCdiss
 
+def calc_chao1(counts):
+	''' Function to calculate the chao1 species richness estimator (S1).
+	Sobs is the number of species in the sample, F1 is the number of singletons
+	(i.e., the number of species with only a single occurrence in the sample)
+	and F2 is the number of doubletons (the number of species with exactly
+	two occurrences in the sample)
+	'''
+
+	F1 = len(np.where(np.array(counts) == 1)[0])
+	F2 = len(np.where(np.array(counts) == 2)[0])
+	Sobs = len(np.where(np.array(counts) != 0)[0])
+
+	# Bias corrected form of chao1
+	S1 = Sobs + (F1*(F1-1))/(2*(F2+1))
+
+	return Sobs, S1
+
 if __name__ == '__main__':
 
 	parser = argparse.ArgumentParser(description='This script calculates a '
@@ -89,13 +106,14 @@ if __name__ == '__main__':
 	## ------------- Alpha Index ------------------------
 	outf1_path = '{}.alpha_diversity.txt'.format(args.out)
 	with open(outf1_path,'w') as outf1:
-		outf1.write('Sample\tShannonInd\tSimpsonInd\n')
+		outf1.write('Sample\tObserved\tChao1\tShannonInd\tSimpsonInd\n')
 		for i in sample_names:
 			samI = sample_dict[i]
 			counts  = data[samI][3]['counts']
 			shannon = str(calc_alpha(counts))
 			simpson = str(calc_alpha(counts,method='simpson'))
-			outf1.write(i+'\t'+shannon+'\t'+simpson+'\n')
+			sobs, chao1 = list(map(str,calc_chao1(counts)))
+			outf1.write(('\t').join([i,sobs,chao1,shannon,simpson])+'\n')
 
 	## ------------- Beta Index -------------------------
 	outf2_path = '{}.beta_diversity.txt'.format(args.out)
