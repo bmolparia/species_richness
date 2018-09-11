@@ -1,1 +1,1 @@
-## spicies_richness
+## Species Richness
