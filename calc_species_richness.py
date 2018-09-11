@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 # Author: Bhuvan Molparia
+#
+# This script calculates alpha and beta diversity for all the samples in a
+# given taxonomic summary file produced by mothur
+# Usage help: python3 calc_species_richness.py --help
 
 import os
 import argparse
@@ -7,12 +11,6 @@ import argparse
 import numpy as np
 
 from parse_tax_summary import tax_parser
-
-'''
-This script calculates the alpha diversity and the beta diversity for
-any given taxonomic distribution at TAX LEVEL 3
-Inputs are - Taxonomy file (output of Mothur), sample sheet, outfile path
-'''
 
 def parse_sample(filepath):
 	fin  = open(filepath,'r')
