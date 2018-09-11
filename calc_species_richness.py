@@ -92,6 +92,8 @@ if __name__ == '__main__':
 	default = None)
 	parser.add_argument('-o', dest='out', help='prefix to files for output '
 	' files')
+	parser.add_argument('-t', dest='taxlvl', help='tax level for calculations',
+	default=6, type=int)
 
 	args = parser.parse_args()
 
@@ -109,7 +111,7 @@ if __name__ == '__main__':
 		outf1.write('Sample\tObserved\tChao1\tShannonInd\tSimpsonInd\n')
 		for i in sample_names:
 			samI = sample_dict[i]
-			counts  = data[samI][3]['counts']
+			counts  = data[samI][args.taxlvl]['counts']
 			shannon = str(calc_alpha(counts))
 			simpson = str(calc_alpha(counts,method='simpson'))
 			sobs, chao1 = list(map(str,calc_chao1(counts)))
@@ -124,11 +126,11 @@ if __name__ == '__main__':
 		for i in sample_names:
 			samI = sample_dict[i]
 			outf2.write(i+'\t')
-			counts1 = data[samI][3]['counts']
+			counts1 = data[samI][args.taxlvl]['counts']
 
 			for j in sample_names:
 				samJ = sample_dict[j]
-				counts2 = data[samJ][3]['counts']
+				counts2 = data[samJ][args.taxlvl]['counts']
 				BCDiss  = str(calc_beta(counts1,counts2))
 				outf2.write(BCDiss+'\t')
 
@@ -139,11 +141,11 @@ if __name__ == '__main__':
 		for i in sample_names:
 			samI = sample_dict[i]
 			outf2.write(i+'\t')
-			counts1 = data[samI][3]['counts']
+			counts1 = data[samI][args.taxlvl]['counts']
 
 			for j in sample_names:
 				samJ = sample_dict[j]
-				counts2 = data[samJ][3]['counts']
+				counts2 = data[samJ][args.taxlvl]['counts']
 				BCDiss  = str(calc_beta(counts1,counts2,method='counts'))
 				outf2.write(BCDiss+'\t')
 
